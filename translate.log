@@ -1,0 +1,59 @@
+[2026-03-02T08:38:02+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T08:38:04+01:00] RESP: {"ok":true,"translated":"Bonjour","engine":"public"}
+[2026-03-02T08:38:04+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T08:38:08+01:00] RESP: {"ok":true,"translated":"Bonjour","engine":"public"}
+[2026-03-02T10:20:48+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:20:50+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:20:52+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:20:54+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:20:55+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:20:55+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:03+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15011 milliseconds"}
+[2026-03-02T10:21:03+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:05+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15005 milliseconds"}
+[2026-03-02T10:21:05+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:07+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15009 milliseconds"}
+[2026-03-02T10:21:07+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:09+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15004 milliseconds"}
+[2026-03-02T10:21:09+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:10+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15002 milliseconds"}
+[2026-03-02T10:21:10+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:10+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15001 milliseconds"}
+[2026-03-02T10:21:10+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:18+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15004 milliseconds"}
+[2026-03-02T10:21:18+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:20+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15002 milliseconds"}
+[2026-03-02T10:21:20+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-02T10:21:22+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15008 milliseconds"}
+[2026-03-02T10:21:24+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15003 milliseconds"}
+[2026-03-02T10:21:25+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15004 milliseconds"}
+[2026-03-02T10:21:25+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15018 milliseconds"}
+[2026-03-02T10:21:33+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15004 milliseconds"}
+[2026-03-02T10:21:35+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15009 milliseconds"}
+[2026-03-03T10:08:34+01:00] REQ: {"text":"Bonjour","target":"fr"}
+[2026-03-03T10:08:37+01:00] REQ: {"text":"Bonjour","target":"fr"}
+[2026-03-03T10:08:37+01:00] RESP: {"ok":true,"translated":"Bonjour","engine":"public"}
+[2026-03-03T10:08:40+01:00] RESP: {"ok":true,"translated":"Bonjour","engine":"public"}
+[2026-03-03T11:42:06+01:00] REQ: {
+    "text":  "Bonjour",
+    "target":  "en"
+}
+[2026-03-03T11:42:17+01:00] REQ: {
+    "text":  "Bonjour",
+    "target":  "en"
+}
+[2026-03-03T11:42:21+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15014 milliseconds"}
+[2026-03-03T11:42:32+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Connection timed out after 15015 milliseconds"}
+[2026-03-03T11:44:20+01:00] REQ: {\
+[2026-03-03T15:18:25+01:00] REQ: {"text":"Texte","target":"en"}
+[2026-03-03T15:18:28+01:00] RESP: {"ok":true,"translated":"Text","engine":"public"}
+[2026-03-03T15:18:39+01:00] REQ: {"text":"Bonjour","target":"en"}
+[2026-03-03T15:18:51+01:00] RESP: {"ok":true,"translated":"Bonjour","engine":"public"}
+[2026-03-03T15:19:04+01:00] REQ: {"text":"Bonsoir","target":"en"}
+[2026-03-03T15:19:06+01:00] RESP: {"ok":true,"translated":"Good evening","engine":"public"}
+[2026-03-04T16:17:02+01:00] REQ: {"text":"Bonsoir","target":"en"}
+[2026-03-04T16:17:02+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Could not resolve host: translate.googleapis.com"}
+[2026-03-04T16:17:11+01:00] REQ: {"text":"Bonsoir","target":"en"}
+[2026-03-04T16:17:11+01:00] RESP: {"ok":false,"error":"public_unavailable","message":"Could not resolve host: translate.googleapis.com"}
+[2026-07-29T11:07:04+02:00] REQ: {"text":"Bonjour","target":"fr"}
+[2026-07-29T11:07:04+02:00] RESP: {"ok":false,"error":"public_unavailable","message":"Could not resolve host: translate.googleapis.com"}
