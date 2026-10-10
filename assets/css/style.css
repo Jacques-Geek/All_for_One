@@ -116,6 +116,10 @@ a {
     margin-bottom: 26px;
 }
 
+.hero-copy {
+    flex: 1;
+}
+
 .eyebrow {
     display: inline-block;
     background: rgba(59, 130, 246, 0.08);
@@ -194,11 +198,27 @@ a {
     font-weight: 700;
 }
 
+.section-head {
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
+.section-head h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    color: #0f172a;
+}
+
+.section-head p {
+    margin: 8px 0 0;
+    color: #64748b;
+}
+
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 18px;
-    margin-top: 22px;
+    margin-top: 14px;
 }
 
 .feature {

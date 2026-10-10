@@ -7,14 +7,15 @@ $showTutoriel = !isset($_SESSION['tutoriel_seen']);
 ?>
 <div class="content">
   <div class="welcome-hero">
-    <div>
+    <div class="hero-copy">
       <span class="eyebrow">Portail multimédia</span>
       <h1>Bienvenue sur All_For_One JP</h1>
-      <p>Transforme, extrait, convertis et optimise tes fichiers directement depuis une seule interface claire et moderne.</p>
+      <p>Transforme, extrait, convertis et optimise tes fichiers depuis une interface claire, rapide et moderne.</p>
       <div class="hero-actions">
         <a href="#features" class="primary-btn">Découvrir les outils</a>
       </div>
     </div>
+
     <div class="hero-badge">
       <strong>7</strong>
       <span>outils</span>
@@ -27,6 +28,11 @@ $showTutoriel = !isset($_SESSION['tutoriel_seen']);
     <a href="tutoriel_seen.php" class="btn-close" aria-label="Fermer la bannière">×</a>
   </div>
   <?php endif; ?>
+
+  <div class="section-head">
+    <h2>Nos fonctionnalités</h2>
+    <p>Tout est centralisé pour gagner du temps.</p>
+  </div>
 
   <div class="features-grid" id="features">
     <a href="convert.php" class="feature"><span>🔁</span> Conversion</a>
