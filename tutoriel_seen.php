@@ -1,5 +1,6 @@
 <?php
 session_start();
 $_SESSION['tutoriel_seen'] = true;
-echo 'ok'
+header('Location: index.php');
+exit;
 ?>
