@@ -198,12 +198,6 @@ include 'includes/sidebar.php';
     display: none;
   }
 
-  input[type="file"] {
-    width: 100%;
-    margin-top: 14px;
-    color: #cbd5e1;
-  }
-
   @media (max-width: 768px) {
     .voice-grid {
       grid-template-columns: 1fr;
@@ -305,14 +299,14 @@ include 'includes/sidebar.php';
         </div>
         <span class="voice-check">✓</span>
       </div>
-      <p class="voice-desc">Voix feminine légère et détendue</p>
+      <p class="voice-desc">Voix féminine légère et détendue</p>
       <button type="button" class="voice-action"><span class="play-icon">▶</span> Écouter</button>
     </div>
   </div>
 
   <div class="voice-generator">
     <h2>Votre texte</h2>
-    <p>Rédigez votre message, enregistrez votre voix, puis générez la lecture.</p>
+    <p>Rédigez votre message, enregistrez votre voix puis générez la lecture.</p>
 
     <textarea id="voiceText">Exemple : Bienvenue chez Christ-ROI
 VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes...</textarea>
@@ -323,7 +317,6 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
       <button type="button" class="secondary-button" id="playRecordedBtn">▶ Écouter l'enregistrement</button>
     </div>
 
-    <input type="file" id="audioFile" accept="audio/*" />
     <audio id="recordedAudio" controls></audio>
     <div id="voiceStatus" class="voice-status">Aucune voix enregistrée pour le moment.</div>
 
@@ -348,7 +341,6 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
   const pauseBtn = document.getElementById('pauseBtn');
   const resumeBtn = document.getElementById('resumeBtn');
   const stopSpeechBtn = document.getElementById('stopSpeechBtn');
-  const audioFileInput = document.getElementById('audioFile');
 
   let selectedVoice = 'Zéphyr';
   let mediaRecorder = null;
@@ -385,7 +377,13 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
     return match || null;
   }
 
-  function fallbackSpeech(text) {
+  function generateVoice() {
+    const text = textArea.value.trim();
+    if (!text) {
+      alert('Veuillez écrire le texte à lire.');
+      return;
+    }
+
     if (!('speechSynthesis' in window)) {
       alert('La synthèse vocale n\'est pas prise en charge par ce navigateur.');
       return;
@@ -404,63 +402,11 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    const selected = chooseVoice();
-    if (selected) utterance.voice = selected;
+    const chosen = chooseVoice();
+    if (chosen) utterance.voice = chosen;
 
     speechSynthesis.speak(utterance);
-    voiceStatus.textContent = 'Lecture locale en cours avec la voix sélectionnée.';
-  }
-
-  async function generateVoice() {
-    const text = textArea.value.trim();
-    if (!text) {
-      alert('Veuillez écrire le texte à lire.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('text', text);
-    formData.append('voice_name', selectedVoice);
-
-    const file = audioFileInput.files[0] || (recordedBlob ? new File([recordedBlob], 'voice_recording.webm', { type: recordedBlob.type || 'audio/webm' }) : null);
-    if (file) {
-      formData.append('audio', file);
-    }
-
-    try {
-      voiceStatus.textContent = 'Génération de la voix en cours...';
-      const response = await fetch('voice_generate.php', {
-        method: 'POST',
-        body: formData
-      });
-
-      const result = await response.json();
-
-      if (result && result.ok && result.audio_url) {
-        recordedAudio.src = result.audio_url;
-        recordedAudio.style.display = 'block';
-        recordedAudio.play();
-        voiceStatus.textContent = result.message || 'Lecture générée avec succès.';
-        return;
-      }
-
-      if (result && result.ok && result.message) {
-        voiceStatus.textContent = result.message;
-        return;
-      }
-
-      if (result && result.demo) {
-        voiceStatus.textContent = 'API de voix non configurée. Lecture locale activée en mode démo.';
-        fallbackSpeech(text);
-        return;
-      }
-
-      throw new Error(result.error || 'Erreur inconnue');
-    } catch (error) {
-      console.error(error);
-      voiceStatus.textContent = 'Erreur de génération. Lecture locale de secours activée.';
-      fallbackSpeech(text);
-    }
+    voiceStatus.textContent = 'Lecture en cours avec la voix sélectionnée.';
   }
 
   async function startRecording() {
@@ -510,14 +456,9 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
   }
 
   function playRecordedAudio() {
-    if (!recordedUrl && !audioFileInput.files[0]) {
+    if (!recordedUrl) {
       alert('Aucun enregistrement vocal disponible.');
       return;
-    }
-
-    if (audioFileInput.files[0]) {
-      recordedAudio.src = URL.createObjectURL(audioFileInput.files[0]);
-      recordedAudio.style.display = 'block';
     }
 
     recordedAudio.play();
