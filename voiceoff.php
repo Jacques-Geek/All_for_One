@@ -23,8 +23,8 @@ include 'includes/sidebar.php';
   }
 
   .voice-card {
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(148, 163, 184, 0.22);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(148,163,184,0.22);
     border-radius: 16px;
     padding: 14px 14px 12px;
     min-height: 120px;
@@ -34,9 +34,9 @@ include 'includes/sidebar.php';
   }
 
   .voice-card.selected {
-    border-color: rgba(251, 146, 60, 0.9);
-    background: rgba(251, 146, 60, 0.08);
-    box-shadow: 0 0 0 1px rgba(251, 146, 60, 0.6);
+    border-color: rgba(251,146,60,0.9);
+    background: rgba(251,146,60,0.08);
+    box-shadow: 0 0 0 1px rgba(251,146,60,0.6);
   }
 
   .voice-top {
@@ -68,8 +68,8 @@ include 'includes/sidebar.php';
     width: 18px;
     height: 18px;
     border-radius: 50%;
-    background: rgba(251, 146, 60, 0.15);
-    border: 1px solid rgba(251, 146, 60, 0.9);
+    background: rgba(251,146,60,0.15);
+    border: 1px solid rgba(251,146,60,0.9);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -108,7 +108,7 @@ include 'includes/sidebar.php';
     width: 22px;
     height: 22px;
     border-radius: 50%;
-    background: rgba(59, 130, 246, 0.12);
+    background: rgba(59,130,246,0.12);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -117,8 +117,8 @@ include 'includes/sidebar.php';
   }
 
   .voice-generator {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(148,163,184,0.2);
     border-radius: 16px;
     padding: 18px 18px 16px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.12);
@@ -140,9 +140,9 @@ include 'includes/sidebar.php';
     width: 100%;
     min-height: 150px;
     resize: vertical;
-    border: 1px solid rgba(148, 163, 184, 0.22);
+    border: 1px solid rgba(148,163,184,0.22);
     border-radius: 12px;
-    background: rgba(15, 23, 42, 0.45);
+    background: rgba(15,23,42,0.45);
     color: #f8fafc;
     padding: 16px 18px;
     font-size: 1rem;
@@ -151,8 +151,8 @@ include 'includes/sidebar.php';
 
   .voice-generator textarea:focus {
     outline: none;
-    border-color: rgba(96, 165, 250, 0.8);
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+    border-color: rgba(96,165,250,0.8);
+    box-shadow: 0 0 0 3px rgba(96,165,250,0.1);
   }
 
   .record-row,
@@ -180,9 +180,9 @@ include 'includes/sidebar.php';
   }
 
   .secondary-button {
-    background: rgba(148, 163, 184, 0.12);
+    background: rgba(148,163,184,0.12);
     color: #e2e8f0;
-    border: 1px solid rgba(148, 163, 184, 0.18);
+    border: 1px solid rgba(148,163,184,0.18);
   }
 
   .voice-status {
@@ -196,6 +196,12 @@ include 'includes/sidebar.php';
     width: 100%;
     margin-top: 12px;
     display: none;
+  }
+
+  input[type="file"] {
+    width: 100%;
+    margin-top: 14px;
+    color: #cbd5e1;
   }
 
   @media (max-width: 768px) {
@@ -299,14 +305,14 @@ include 'includes/sidebar.php';
         </div>
         <span class="voice-check">✓</span>
       </div>
-      <p class="voice-desc">Voix féminine légère et détendue</p>
+      <p class="voice-desc">Voix feminine légère et détendue</p>
       <button type="button" class="voice-action"><span class="play-icon">▶</span> Écouter</button>
     </div>
   </div>
 
   <div class="voice-generator">
     <h2>Votre texte</h2>
-    <p>Rédigez votre message, enregistrez votre voix puis générez la lecture.</p>
+    <p>Rédigez votre message, enregistrez votre voix, puis générez la lecture.</p>
 
     <textarea id="voiceText">Exemple : Bienvenue chez Christ-ROI
 VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes...</textarea>
@@ -317,6 +323,7 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
       <button type="button" class="secondary-button" id="playRecordedBtn">▶ Écouter l'enregistrement</button>
     </div>
 
+    <input type="file" id="audioFile" accept="audio/*" />
     <audio id="recordedAudio" controls></audio>
     <div id="voiceStatus" class="voice-status">Aucune voix enregistrée pour le moment.</div>
 
@@ -341,12 +348,13 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
   const pauseBtn = document.getElementById('pauseBtn');
   const resumeBtn = document.getElementById('resumeBtn');
   const stopSpeechBtn = document.getElementById('stopSpeechBtn');
+  const audioFileInput = document.getElementById('audioFile');
 
   let selectedVoice = 'Zéphyr';
   let mediaRecorder = null;
   let recordedStream = null;
-  let recordedBlob = null;
   let recordedUrl = '';
+  let recordedBlob = null;
 
   cards.forEach((card) => {
     card.addEventListener('click', () => {
@@ -362,8 +370,7 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
   }
 
   function loadVoices() {
-    const voices = getAvailableVoices();
-    if (voices.length === 0) {
+    if (getAvailableVoices().length === 0) {
       voiceStatus.textContent = 'Le navigateur charge encore les voix disponibles...';
     }
   }
@@ -378,13 +385,7 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
     return match || null;
   }
 
-  function generateVoice() {
-    const text = textArea.value.trim();
-    if (!text) {
-      alert('Veuillez écrire le texte à lire.');
-      return;
-    }
-
+  function fallbackSpeech(text) {
     if (!('speechSynthesis' in window)) {
       alert('La synthèse vocale n\'est pas prise en charge par ce navigateur.');
       return;
@@ -407,7 +408,59 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
     if (selected) utterance.voice = selected;
 
     speechSynthesis.speak(utterance);
-    voiceStatus.textContent = 'Lecture en cours avec la voix sélectionnée.';
+    voiceStatus.textContent = 'Lecture locale en cours avec la voix sélectionnée.';
+  }
+
+  async function generateVoice() {
+    const text = textArea.value.trim();
+    if (!text) {
+      alert('Veuillez écrire le texte à lire.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('text', text);
+    formData.append('voice_name', selectedVoice);
+
+    const file = audioFileInput.files[0] || (recordedBlob ? new File([recordedBlob], 'voice_recording.webm', { type: recordedBlob.type || 'audio/webm' }) : null);
+    if (file) {
+      formData.append('audio', file);
+    }
+
+    try {
+      voiceStatus.textContent = 'Génération de la voix en cours...';
+      const response = await fetch('voice_generate.php', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result && result.ok && result.audio_url) {
+        recordedAudio.src = result.audio_url;
+        recordedAudio.style.display = 'block';
+        recordedAudio.play();
+        voiceStatus.textContent = result.message || 'Lecture générée avec succès.';
+        return;
+      }
+
+      if (result && result.ok && result.message) {
+        voiceStatus.textContent = result.message;
+        return;
+      }
+
+      if (result && result.demo) {
+        voiceStatus.textContent = 'API de voix non configurée. Lecture locale activée en mode démo.';
+        fallbackSpeech(text);
+        return;
+      }
+
+      throw new Error(result.error || 'Erreur inconnue');
+    } catch (error) {
+      console.error(error);
+      voiceStatus.textContent = 'Erreur de génération. Lecture locale de secours activée.';
+      fallbackSpeech(text);
+    }
   }
 
   async function startRecording() {
@@ -457,10 +510,16 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
   }
 
   function playRecordedAudio() {
-    if (!recordedUrl) {
+    if (!recordedUrl && !audioFileInput.files[0]) {
       alert('Aucun enregistrement vocal disponible.');
       return;
     }
+
+    if (audioFileInput.files[0]) {
+      recordedAudio.src = URL.createObjectURL(audioFileInput.files[0]);
+      recordedAudio.style.display = 'block';
+    }
+
     recordedAudio.play();
     voiceStatus.textContent = 'Lecture de votre enregistrement vocal.';
   }
