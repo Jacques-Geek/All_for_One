@@ -17,7 +17,7 @@ $showTutoriel = !isset($_SESSION['tutoriel_seen']);
     </div>
 
     <div class="hero-badge">
-      <strong>7</strong>
+      <strong>8</strong>
       <span>outils</span>
     </div>
   </div>
@@ -41,6 +41,7 @@ $showTutoriel = !isset($_SESSION['tutoriel_seen']);
     <a href="ocr.php" class="feature"><span>🧠</span> OCR</a>
     <a href="speech.php" class="feature"><span>🗣️</span> SPEECH</a>
     <a href="qr.php" class="feature"><span>📱</span> QR</a>
+    <a href="voiceoff.php" class="feature"><span>🎙️</span> VoiceOff</a>
     <a href="feedback.php" class="feature"><span>💬</span> Feedback</a>
   </div>
 </div>
