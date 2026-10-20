@@ -14,6 +14,7 @@
     <li><a href="ocr.php">🧠 OCR</a></li>
     <li><a href="speech.php">🗣️ Speech</a></li>
     <li><a href="qr.php">📱 QR Code</a></li>
+    <li><a href="voiceoff.php">🎙️ VoiceOff</a></li>
     <li><a href="feedback.php">💬 Feedback</a></li>
   </ul>
 </div>
