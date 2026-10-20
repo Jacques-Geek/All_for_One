@@ -155,43 +155,47 @@ include 'includes/sidebar.php';
     box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
   }
 
-  .voice-footer {
+  .record-row,
+  .action-row {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    margin-top: 16px;
-    color: #d1d5db;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .record-button,
+  .action-button,
+  .secondary-button {
+    border: none;
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .record-button,
+  .action-button {
+    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+    color: white;
+  }
+
+  .secondary-button {
+    background: rgba(148, 163, 184, 0.12);
+    color: #e2e8f0;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+  }
+
+  .voice-status {
+    margin-top: 12px;
+    min-height: 22px;
+    color: #e2e8f0;
     font-size: 0.9rem;
   }
 
-  .credits {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-weight: 600;
-  }
-
-  .credits .star {
-    color: #f59e0b;
-  }
-
-  .generate-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+  audio {
     width: 100%;
-    margin-top: 18px;
-    border: none;
-    border-radius: 12px;
-    padding: 16px 18px;
-    background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
-    color: white;
-    font-size: 1.05rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 10px 20px rgba(249, 115, 22, 0.24);
+    margin-top: 12px;
+    display: none;
   }
 
   @media (max-width: 768px) {
@@ -302,17 +306,26 @@ include 'includes/sidebar.php';
 
   <div class="voice-generator">
     <h2>Votre texte</h2>
-    <p>Écrivez le texte à transformer en voix off.</p>
+    <p>Rédigez votre message, enregistrez votre voix puis générez la lecture.</p>
 
     <textarea id="voiceText">Exemple : Bienvenue chez Christ-ROI
 VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes...</textarea>
 
-    <div class="voice-footer">
-      <div class="credits"><span class="star">★</span> 25 crédits par génération</div>
-      <div>0 / 5000 caractères</div>
+    <div class="record-row">
+      <button type="button" class="record-button" id="startRecordBtn">🎙️ Enregistrer ma voix (30s)</button>
+      <button type="button" class="secondary-button" id="stopRecordBtn">⏹ Arrêter</button>
+      <button type="button" class="secondary-button" id="playRecordedBtn">▶ Écouter l'enregistrement</button>
     </div>
 
-    <button type="button" class="generate-btn" id="generateVoiceBtn">▶ Générer ma voix off</button>
+    <audio id="recordedAudio" controls></audio>
+    <div id="voiceStatus" class="voice-status">Aucune voix enregistrée pour le moment.</div>
+
+    <div class="action-row">
+      <button type="button" class="action-button" id="generateVoiceBtn">🔊 Générer la lecture</button>
+      <button type="button" class="secondary-button" id="pauseBtn">⏸ Pause</button>
+      <button type="button" class="secondary-button" id="resumeBtn">⏵ Reprendre</button>
+      <button type="button" class="secondary-button" id="stopSpeechBtn">⏹ Stop</button>
+    </div>
   </div>
 </div>
 
@@ -320,25 +333,66 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
   const cards = document.querySelectorAll('.voice-card');
   const textArea = document.getElementById('voiceText');
   const generateBtn = document.getElementById('generateVoiceBtn');
+  const startRecordBtn = document.getElementById('startRecordBtn');
+  const stopRecordBtn = document.getElementById('stopRecordBtn');
+  const playRecordedBtn = document.getElementById('playRecordedBtn');
+  const recordedAudio = document.getElementById('recordedAudio');
+  const voiceStatus = document.getElementById('voiceStatus');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const resumeBtn = document.getElementById('resumeBtn');
+  const stopSpeechBtn = document.getElementById('stopSpeechBtn');
+
   let selectedVoice = 'Zéphyr';
+  let mediaRecorder = null;
+  let recordedStream = null;
+  let recordedBlob = null;
+  let recordedUrl = '';
 
   cards.forEach((card) => {
     card.addEventListener('click', () => {
       cards.forEach(item => item.classList.remove('selected'));
       card.classList.add('selected');
       selectedVoice = card.dataset.voice;
+      voiceStatus.textContent = 'Voix sélectionnée : ' + selectedVoice;
     });
   });
+
+  function getAvailableVoices() {
+    return speechSynthesis.getVoices();
+  }
+
+  function loadVoices() {
+    const voices = getAvailableVoices();
+    if (voices.length === 0) {
+      voiceStatus.textContent = 'Le navigateur charge encore les voix disponibles...';
+    }
+  }
+
+  speechSynthesis.onvoiceschanged = loadVoices;
+  loadVoices();
+
+  function chooseVoice() {
+    const voices = getAvailableVoices();
+    const target = selectedVoice.toLowerCase();
+    const match = voices.find(v => v.name.toLowerCase().includes(target)) || voices.find(v => v.lang.toLowerCase().startsWith('fr')) || voices[0];
+    return match || null;
+  }
 
   function generateVoice() {
     const text = textArea.value.trim();
     if (!text) {
-      alert('Veuillez écrire un texte avant la génération.');
+      alert('Veuillez écrire le texte à lire.');
       return;
     }
 
     if (!('speechSynthesis' in window)) {
       alert('La synthèse vocale n\'est pas prise en charge par ce navigateur.');
+      return;
+    }
+
+    const voices = getAvailableVoices();
+    if (voices.length === 0) {
+      alert('Les voix du navigateur ne sont pas encore prêtes. Réessayez dans quelques secondes.');
       return;
     }
 
@@ -349,14 +403,84 @@ VO ! Votre message, lu par une voix professionnelle, prêt en quelques secondes.
     utterance.pitch = 1;
     utterance.volume = 1;
 
-    const voices = speechSynthesis.getVoices();
-    const match = voices.find(v => v.name.toLowerCase().includes(selectedVoice.toLowerCase()));
-    if (match) utterance.voice = match;
+    const selected = chooseVoice();
+    if (selected) utterance.voice = selected;
 
     speechSynthesis.speak(utterance);
+    voiceStatus.textContent = 'Lecture en cours avec la voix sélectionnée.';
+  }
+
+  async function startRecording() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      alert('L’enregistrement audio n\'est pas supporté par ce navigateur.');
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      recordedStream = stream;
+      mediaRecorder = new MediaRecorder(stream);
+      const chunks = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        recordedBlob = new Blob(chunks, { type: 'audio/webm' });
+        if (recordedUrl) URL.revokeObjectURL(recordedUrl);
+        recordedUrl = URL.createObjectURL(recordedBlob);
+        recordedAudio.src = recordedUrl;
+        recordedAudio.style.display = 'block';
+        voiceStatus.textContent = 'Enregistrement terminé. Vous pouvez l’écouter ou générer une lecture.';
+        recordedStream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      voiceStatus.textContent = 'Enregistrement en cours... Parlez pendant 30 secondes.';
+
+      setTimeout(() => {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+          mediaRecorder.stop();
+        }
+      }, 30000);
+    } catch (error) {
+      alert('L’accès au microphone a été refusé. Autorisez l’accès et réessayez.');
+      console.error(error);
+    }
+  }
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+    }
+  }
+
+  function playRecordedAudio() {
+    if (!recordedUrl) {
+      alert('Aucun enregistrement vocal disponible.');
+      return;
+    }
+    recordedAudio.play();
+    voiceStatus.textContent = 'Lecture de votre enregistrement vocal.';
   }
 
   generateBtn.addEventListener('click', generateVoice);
+  startRecordBtn.addEventListener('click', startRecording);
+  stopRecordBtn.addEventListener('click', stopRecording);
+  playRecordedBtn.addEventListener('click', playRecordedAudio);
+
+  pauseBtn.addEventListener('click', () => {
+    if (speechSynthesis.speaking && !speechSynthesis.paused) speechSynthesis.pause();
+  });
+
+  resumeBtn.addEventListener('click', () => {
+    if (speechSynthesis.paused) speechSynthesis.resume();
+  });
+
+  stopSpeechBtn.addEventListener('click', () => {
+    if (speechSynthesis.speaking) speechSynthesis.cancel();
+  });
 </script>
 
 </body>
